@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>路由传参2</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router-3.0.1.js"></script>
+    <style>
+    .myRouteClass{
+        background: red;
+        color:#fff;
+        text-decoration: none;
+    }
+    .myRegClass{
+        background: green;
+        color: #fff;
+        font-size: 20px;
+        text-decoration: none;
+    }   
+      /*动画  */
+    .tt-enter,.tt-leave-to{
+        opacity: 0;
+        transform: translate(200px,100px);
+    }
+    .tt-enter-active,.tt-leave-active{
+        transition:all 1s;
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 2.在login里面写参数，要修改路由规则的path属性；这里/后不能少参数,要匹配-->
+        <router-link to="/login/10/lisi">登录</router-link>
+        <!-- 链接激活时的类名 -->
+        <router-link to="/reg" active-class="myRegClass">注册</router-link>
+        <!-- 自定义动画类名前缀tt -->
+        <transition name="tt" mode="out-in">
+            <router-view></router-view>
+        </transition>
+    </div>
+</body>
+<script>
+    // 组件的模板 登录组件
+    var login={
+        template:`<h3>登录---id:{{$route.params.id}}---name:{{this.$route.params.name}}
+                -- {{msg}}
+                </h3>`,
+        data(){
+            return {msg:"组件的msg"};
+        },
+        // 通过生命周期钩子函数，可以打印一下
+        created(){
+            // console.log(this);//VueComponent 
+            console.log(this.$route.params.id)//10
+        }
+    }
+    // 注册组件
+    var reg={
+        template:"<h3>注册</h3>"
+    }
+    var router=new VueRouter({
+        // 就这一个地方不要r
+        routes:[
+            // 1. 动态路径参数 以冒号开头。在path后面加/:id/:name
+            {"path":"/login/:id/:name","component":login},
+            {"path":"/reg",component:reg},
+        ],
+        // 字母写对
+        linkActiveClass:"myRouteClass",
+    })
+    var vm=new Vue({
+        el:"#app",
+        data:{},
+        // router,有r
+        // router:router,简写：
+        router
+    })
+</script>
+</html>

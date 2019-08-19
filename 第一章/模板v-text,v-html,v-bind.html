@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-cloak/v-text/v-html</title>
+    <style>
+        /* 解决加载时的闪烁问题 */
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <!-- 插值表达式 -->
+        <!-- ----{{msg}}----
+        默认v-text没有闪烁问题,会替换标签原本的内容 -->
+        <p v-text='msg'>------</p>
+         <!-- 可以转化标签 -->
+        <div v-html="msg2">
+            111222
+        </div>
+        <button @click="ff">按钮</button>
+        <button v-on:click="ff">按钮</button>
+         v-bind绑定属性，简写为：
+        <p v-bind:title="mytitle+123">v-bind绑定属性，简写为：</p>
+        <p :title="mytitle +'abc'">v-bind绑定属性，简写为：</p>
+        <p :[attribute]="mytitle">:[attribute]="mytitle"测试</p>
+
+        javascript表达式：{{ number + 1 }}
+       
+    </div>
+
+
+</body>
+<script src="js/vue.min.js"></script>
+<script>
+    // var data = { a: 1 };
+    // var vm = new Vue({
+    //     el:"#app",
+    //     data: data
+    // })
+    // vm.a == data.a;//true 值相同
+    // vm.a=2;
+    // console.log(data.a)//2
+    // data.a=3;
+    // console.log(vm.a);//3
+    // vm.$watch('a',function(newval,oldval){
+    //     console.log(vm.a)
+    // })
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            msg: 'msg:vue MVVM思想',
+            msg2: 'msg2:<h2>h2标签</h2>',
+            attribute:'title',
+            mytitle:'p标记',
+            number:2,
+        },
+        // methods定义所有可用的方法
+        methods:{
+            ff:function(){
+                console.log("@click绑定事件");
+            }
+        }
+    })
+</script>
+
+</html>

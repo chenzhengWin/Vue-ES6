@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-show、v-if</title>
+</head>
+
+<body>
+    <div id="app">
+        
+        <!-- <input type="button" value="toggle" @click="toggle"> -->
+        <!-- 函数体简短时可以直接写 -->
+        <input type="button" value="toggle" @click="flag=!flag">
+        <!-- v-if 的特点：每次都会重新删除或创建元素 有较高的切换性能消耗-->
+        <!-- v-show 的特点： 每次不会重新进行DOM的删除和创建操作，只是切换了元素的 display:none 样式 
+            有较高的初始渲染消耗-->
+            
+        <!-- 如果元素涉及到频繁的切换，推荐使用 v-show 改变display-->
+        <!-- 如果元素可能永远也不会被显示出来被用户看到，则推荐使用 v-if -->
+        <!-- 如果在运行时条件很少改变，则使用 v-if 较好。 -->
+        <p v-show="flag">v-show的使用</p>
+        <p v-if="flag">v-if的使用Now you see me</p>
+        <!-- 用于v-if为false时显示 -->
+        <p v-else>
+            Now you don't
+        </p>
+
+        v-if显示多个标签，用template标记，打印时不会打印出来它
+        <template v-if="ok">
+            <h1>Title</h1>
+            <p>Paragraph 1</p>
+            <p>Paragraph 2</p>
+        </template>
+
+        v-if, v-else-if,v-else的使用：
+        <div v-if="Math.random() > 0.5">
+            Now you see me
+        </div>
+        <div v-else>
+            Now you don't
+        </div>
+        -----------
+        <div v-if="type === 'A'">
+            A
+        </div>
+        <div v-else-if="type === 'B'">
+            B
+        </div>
+        <div v-else-if="type === 'C'">
+            C
+        </div>
+        <div v-else>
+            Not A/B/C
+        </div>
+        -----------
+        <p> 如果你允许用户在不同的登录方式之间切换：</p>
+        <template v-if="LoginType==='username'">
+            <label>Username</label>
+            <input placeholder="Enter your username" key="u-input">
+        </template>
+        <template v-else-if="LoginType==='Email'">
+            <label>Email</label>
+            <input placeholder="Enter your email address" key="email-input">
+        </template>
+        <button @click="TogLoginType">切换登录方式</button>
+    </div>
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            flag: true,
+            ok: true,
+            type: 'A',
+            LoginType: 'username'
+        },
+        methods: {
+            // toggle: function () {
+            //     this.flag = !this.flag;//this不能省
+            // }
+            TogLoginType: function () {
+                if (this.LoginType === 'username') {
+                    this.LoginType = "Email";//this不能省
+                } else {
+                    this.LoginType = "username";
+                }
+            }
+        }
+    });
+</script>
+
+</html>

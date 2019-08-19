@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <!-- 导入路由包 -->
+    <script src="../js/vue-router-3.0.1.js"></script>
+</head>
+<style>
+    .myclass{
+        color: red;
+    }
+</style>
+<body>
+    <div id="app">
+        <!-- 4.写要点击的链接 -->
+        <!-- 带#号 -->
+        <!-- <a href="#/login">登录</a>
+        <a href="#/register">注册</a> -->
+
+        <!-- 推荐写法 router-link默认渲染为a标签。
+            用tag手动改为button
+            to属性指定传入链接
+        -->
+        <router-link to="/login" tag="button">登录</router-link>
+        <router-link to="/register">注册</router-link>
+        <!-- 这是Vue-router提供的元素，专门用来当做占位符 
+            路由匹配的组件将渲染在这里-->
+        <router-view></router-view>
+    </div>
+</body>
+<script>
+    // 1.模板对象(前提是导入vue-router.js)
+    var login=Vue.extend({
+        template:"<h3>hi，登录组件模板</h3>"
+    });
+    var register={
+        template:"<h3>hello,注册组件模板</h3>"
+    }
+    // 2.创建全局路由对象
+    // routes可以写成变量，然后放入内部
+    var routerObj=new VueRouter({
+        // 路由规则数组routes,没有r,route-s 属性：path、component
+        routes:[
+            // 设置一个重定向，默认路由地址，这里展示登录的路由。否则页面的路由一开始是不显示路由组件
+            {path:'/',redirect:'/login'},
+            // component:只能是模板名(不加引号)，不是是组件名，组件名需要用于标签名
+            {path:'/login',component:login},
+            {path:'/register',component:register},
+        ],
+        linkActiveClass:'myclass',
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+
+        },
+        methods: {
+
+        },
+        // 3.通过 router 属性来使用路由规则,有r
+        router:routerObj,
+    })
+</script>
+</html>

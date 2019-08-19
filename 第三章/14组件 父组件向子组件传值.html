@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>复习组件</title>
+    <script src="../js/vue.js"></script>
+    <style>
+    
+    </style>
+</head>
+<body>
+    <div id="app">
+      <mylogin></mylogin>
+      <login></login>
+        <!-- vm中的data数据传给子组件 -->
+      <com1 v-bind:contentmsg="msg"></com1>
+    </div>
+</body>
+<script>
+    // 组件模板对象
+    var login={
+        template:"<h3>login-template</h3>"
+    }
+    // 全局
+    // Vue.component("mylogin",login)
+
+    var vm = new Vue({
+        el:"#app",
+        data:{
+           msg:"数据，给子组件使用"
+        },
+        methods:{
+            
+        },
+        // 私有组件
+        components:{
+            //'组件名称'：组件模板对象
+            mylogin:login,
+            // 直接用模板对象
+            login,
+            com1:{
+                // 组件私有的，不是父组件传递的。可读可写
+                data:function(){
+                    return {
+                        title:'123',
+                        content:'qqq'
+                    }
+                },
+                // 新的属性contentmsg,用vm中data中的数据
+                template:'<h5>子组件:{{contentmsg}}</h5>',
+                // props中的数据都是父组件传递给子组件的，这里把vm的第一层叫做父组件
+                // props中断数据是只读的
+                props:['contentmsg'],
+                
+            }
+
+
+        }
+    })
+
+</script>
+</html>

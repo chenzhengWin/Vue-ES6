@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>17使用ref获取DOM和组件引用</title>    
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="button"  value='点击' @click="get" ref="mybtn">
+        <!-- v-text,v-html会替换原来内容 -->
+        <h5 ref="h5">{{msg}}asas</h5>
+        <mylogin ref="mylogin"></mylogin>
+    </div>
+    <template id="temp1">
+        <div>
+            <p style="white-space:pre-line;">
+                17使用ref 获取DOM和组件的引用，实现了如document.getElementById("XX")的功能
+                vue的$refs属性
+                绑定在一般元素上时，ref 指 DOM 元素，绑定在组件上时，ref 为一组件实例。
+                this.$refs.ref名
+            </p>
+        </div>
+    </template>
+    
+</body>
+<script>
+    var login={
+        data(){
+            return {msg:'hello'}
+        },
+        template:'#temp1',
+        methods:{
+            show(){
+                console.log("组件里的show方法")
+            }
+        }
+    }
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            msg:'这是h5标签',
+        },
+        methods:{
+            get(){
+                // this.$refs.ref名 来获取元素
+                console.log(this.$refs.h5.innerText)
+                // this.$refs.ref名 来获取组件
+                console.log(this.$refs.mylogin.msg)
+                console.log(this.$refs.mylogin.show())
+            },
+        },
+        components:{
+            mylogin:login,
+        },
+    })
+</script>
+</html>

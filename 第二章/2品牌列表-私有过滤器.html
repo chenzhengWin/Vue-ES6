@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>品牌列表2</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+
+<body>
+    <!--格式化日期-->
+    <div id="app" :style="wrap">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label for="">
+                    Id:
+                    <input type="text" class="form-control" v-model="id">
+                </label>
+                <label for="">
+                    Name:
+                    <input type="text" class="form-control" v-model="name">
+                </label>
+                <input type="button" value="添加" @click="add">
+                <label for="">
+                    关键字:
+                    <input type="text" class="form-control" v-model="keywords">
+                </label>
+                <!-- <input type="button" value="搜索" @click="search(item.keywords)"> -->
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Ope</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in search(keywords)" :key="item.id">
+                    <td v-text="item.id"></td>
+                    <!--v-text指令里面不用{{}}-->
+                    <td>{{item.name}}</td>
+                    <!--过滤器  ‘|’是管道符-->
+                    <!--<td>{{item.addTime | timeFormat}}</td>-->
+
+                    <td>{{item.addTime | timeFormat}}</td>
+                    <!-- 阻止默认行为 -->
+                    <td><a href="javascript:;" @click.prevent="del(item.id)">{{item.ope}}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="app2">
+        {{msg|timeFormat}}
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script>
+    // 格式化日期函数
+    function formatDate(d) {
+        return d > 10 ? d : d.toString().padStart(2, '0');//字符串前面补0
+    }
+    // 全局过滤器 填充表格的日期 调用一下格式化日期函数
+    Vue.filter('timeFormat', function (date) {
+        // console.log(typeof date.getFullYear())//number   
+        date = new Date(date);
+        var year = date.getFullYear();
+        // var month = (date.getMonth() + 1) > 10 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1);
+        // var day = date.getDate() > 10 ? date.getDate() : "0" + date.getDate();
+        var month = formatDate(date.getMonth() + 1);
+        var day =formatDate( date.getDate());
+        // return year+"-"+month+"-"+day;
+        return `${year}-${month}-${day}`;
+    })
+
+    // Vue.filter('timeFormat', function (datestr, pattern) {
+    //     //通过日期字符串创建对应的日期
+    //     var date = new Date(datestr);
+    //     // console.log(date)
+    //     var year = date.getFullYear() < 10 ? '0' + date.getFullYear() : date.getFullYear();
+    //     var month = date.getMonth() + 1 < 10 ? '0' + date.getMonth() : date.getMonth();
+    //     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    //     //如果有参数且是'yyyy-mm-dd' 格式
+    //     if (pattern && pattern.toLowerCase() === 'yyyy-mm-dd') {
+    //         //年月日格式
+    //         return `${year}-${month}-${day}`;
+    //     }
+    //     //过滤器没有参数，化为年月日时分秒
+    //     else {
+    //         var hour = date.getHours();
+    //         var min = date.getMinutes();
+    //         var sec = date.getSeconds();
+    //         return `${year}-${month}-${day}  ${hour}时${min}分${sec}秒`;
+    //     }
+
+    // })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            id: "",
+            name: '',
+            addTime: new Date(),
+            ope: '删除',
+            keywords: '',
+            wrap: {
+                margin: '10px',
+            },
+            list: [
+                { id: '1', name: 'aa', addTime: new Date() },
+                { id: '2', name: 'bb', addTime: new Date() },
+                { id: '3', name: 'ba', addTime: '2018-7-8' },
+                { id: '4', name: 'ac', addTime: '2018-7-8' },
+            ],
+        },
+        methods: {
+            add: function () {
+                // console.log("ok");
+                var car = { id: this.id, name: this.name, addTime: this.addTime };
+
+                this.list.push(car);
+                this.id = this.name = "";
+            },
+            //1.通过id找索引
+            // 2.
+            del(id) {
+                // splice() 方法用于添加或删除数组中的元素,返回删除掉的元素的数组。这种方法会改变原始数组。
+
+                /* some() 方法会依次执行数组的每个元素：
+                如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测。
+                如果没有满足条件的元素，则返回false。 */
+
+                /* this.list.some(
+                    (item,index)=>{
+                    if(item.id==id){
+                        // 传index
+                        this.list.splice(index,1);
+                        return true;
+                    }
+                }) */
+                // 方法二
+                let index = this.list.findIndex(
+                    (item) => {
+                        if (item.id == id) {
+                            return true;
+                        }
+                    })
+                // console.log(index) //找到索引
+                this.list.splice(index, 1)
+            },
+            //变量name为关键字
+            /* 数组新方法：forEach,some,findIndex,filter */
+            search(keywords) {
+                /*filter() 方法创 建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+                注意： filter() 不会对空数组进行检测。
+                注意： filter() 不会改变原始数组。 */
+                return this.list.filter(item1 => {
+                    if (item1.name.includes(keywords)) {
+                        //filter中函数的返回值
+                        return item1;
+                    }
+                });
+            },
+
+        }
+    })
+    var vm2 = new Vue({
+        el: "#app2",
+        data: {
+            msg: new Date(),
+        },
+        //私有过滤器 加“s” 调用的时候采取就近原则
+        // 私有过滤器名称与全局过滤器一样时，调用私有过滤器
+        filters: {
+            timeFormat(arg) {
+                return arg.toLocaleString();
+            }
+        },
+    })
+
+</script>
+
+</html>

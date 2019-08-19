@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>计算属性</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="ex" v-cloak>
+    <p>{{msg}}</p>
+    <!-- 直接写属性，不用加（） -->
+    <p>使用计算属性：{{revMsg}}</p>
+    <!-- 显示出来vue中定义的function函数 -->
+    <p>原始方法：{{reverseMsg}}</p>
+    <!-- 调用原始方法，加（） -->
+    <p>调用了原始方法：{{reverseMsg()}}</p>
+    <p>使用计算属性：{{now}}</p>
+    <!--evenNum写在计算属性中-->
+    <div v-for="item in evenNum">{{item}}</div>
+    <p :style="num" v-for="item1 in even(nums)">{{item1}}</p>
+</div>
+
+<div id="demo">
+    {{fullName}}
+</div>
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#ex",
+        data: {
+            msg: "Hello",
+            nums: [1, 2, 3, 4, 5, 6],
+            num:{
+                color:'red',
+            },
+        },
+        computed: {
+            // 计算属性的 getter
+            revMsg: function () {
+                // this是指vue实例 vm
+                return this.msg.split("").reverse().join("")
+            },
+            now: function () {
+                return new Date().getFullYear();
+            },
+            evenNum: function () {
+                return this.nums.filter(item => {
+                    if (item % 2 == 0)
+                        return item;
+                })
+            }
+        },
+        methods: {
+            reverseMsg() {
+                return this.msg.split("").reverse().join("")
+            },
+            //argNum是参数
+            even(argNum) {
+                return argNum.filter(aa => {
+                    aa % 2 == 0;
+                    return aa;
+                })
+            },
+        }
+    })
+    var vm1 = new Vue({
+        el: '#demo',
+        data: {
+            firstName: 'Foo',
+            lastName: 'Bar',
+
+        },
+        computed: {
+            fullName: {
+                //   getter 默认属性只有getter
+                get: function () {
+                    return this.firstName + " " + this.lastName;
+                },
+                //   setter 自己添加的
+                set: function (newName) {
+                    var names = newName.split(' ');
+                    console.log(names)
+                    this.firstName = names[0];
+                    this.lastName = names[names.length - 1];
+                }
+            }
+        }
+    })
+</script>
+
+</html>
+<script>
+    vm1.fullName = 'John Doe'
+
+</script>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件修饰符</title>
+    <style>
+        .cla {
+            color: red;
+            padding: 5px;
+            width: 500px;
+            height: 500px;
+            background: lightgreen;
+
+        }
+
+        .cla2 {
+            border: 3px solid #ccc;
+            text-indent: 10px;
+            color: #666;
+            font-family: 'youyuan';
+            letter-spacing: 0.5;
+
+        }
+
+        .cla3 {
+            border: 3px solid #ccc;
+            text-indent: 10px;
+            color: rgb(109, 84, 221);
+            font-family: 'youyuan';
+            font-weight: bold;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        v-bind:属性名=“变量名”，简写为 :属性名=
+        v-on:click="函数名" 简写为 @click="函数名"
+        动态参数表达式有一些语法约束，因为某些字符，例如空格和引号，放在 HTML 特性名里是无效的。
+        同样，在 DOM 中使用模板时你需要回避大写键名。
+        例如，下面的代码是无效的：
+        这会触发一个编译警告
+        <a v-bind:['foo' + bar]="value"> ... </a>
+    -->
+    <!--  
+        .stop阻止冒泡
+        .prevent阻止默认行为
+        .capture触发捕获事件
+        .self 只有当前元素是自身时触发事件处理函数；点击其内部元素时不会冒泡到本元素
+        .once 只触发一次事件,函数内的代码只执行一次
+
+        v-model:双向绑定，用于表单元素
+    -->
+    <div id="wrapper" @click.captrue="divHanlder" :class="[class1,class2]">
+        <!-- self 点击input不会触发 boxHanlder()-->
+        <div class="box" @click.self="boxHanlder" v-bind:style="{width:'100px',height:'100px',background:'yellow'}">
+            <input type="button" value="input按钮" @click="inputHanlder">
+        </div>
+
+        <!-- target='_blank'在新的页面打开 -->
+        <a href="https://www.baidu.com" target='_blank' @click='aHanlder'>百度</a>
+        <!-- 只阻止一次 -->
+        <a :href="url" @click.prevent.once='aHanlder'>百度2</a>
+        <!-- .once -->
+        <button v-on:click.once='btnClick'>按钮1</button>
+        <br>
+        <!-- 默认提交表单会重新加载页面，这里阻止  -->
+        <form action="" v-on:submit.prevent>
+            <input type="submit" value="提交">
+        </form>
+        v-model双向绑定
+        <p>{{msg}}</p>
+        <input type="text" placeholder="input" v-model='msg' :class="class3">
+        <br>
+        计算器
+        <div>
+            <input type="text" placeholder="0" v-model='d1' :style="{width:w}">
+            <select name="sel" v-model="opt">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+            <input type="text" placeholder="0" v-model='d2' :style="{width:w}">
+            <!-- <button v-on:click='dengyu'>=</button> -->
+            <input type="button" value="=" @click='dengyu'>
+            <input type="text" placeholder="0" v-model='result' :style="{width:w}">
+        </div>
+        <br>
+        <!-- 事件捕获 -->
+        <!--  class="box" @click.stop 不冒泡到wrapper -->
+        事件捕获:由外到内
+        <div class="box" @click.capture="boxHanlder"
+            v-bind:style="{width:'150px',height:'150px',background:'yellow',marginTop:mar}">
+
+            <div @click.capture="capture" :style="cap">
+                <div @click="son" :style="innerDiv">son</div>
+            </div>
+        </div>
+    </div>
+    input和datalist：
+    <input type="text" list="aa">
+    <datalist id="aa">
+        <option value="value+">+</option>
+        <option value="v-+">-</option>
+        <option value="v*.">*</option>
+        <option value="v/..">/</option>
+    </datalist>
+</body>
+
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#wrapper",
+        data: {
+            url: 'https://www.baidu.com',
+            class1: 'cla',
+            class2: 'cla2',
+            class3: 'cla3',
+            msg: '我是好孩子',
+            mar: '10px',
+            d1: "",
+            opt: '+',
+            d2: "",
+            w: '100px',
+            result: "",
+            cap: {
+                width: '100px',
+                height: '100px',
+                background: 'gray',
+            },
+            innerDiv: {
+                width: '50px',
+                height: '50px',
+                background: 'pink',
+            }
+        },
+        methods: {
+            dengyu: function () {
+                switch (this.opt) {
+                    case "+":
+                        this.result = parseInt(this.d1) + parseInt(this.d2);
+                        break;
+                    case "-":
+                        this.result = parseInt(this.d1) - parseInt(this.d2);
+                        break;
+                    case "*":
+                        this.result = parseInt(this.d1) * parseInt(this.d2);
+                        break;
+                    case "/":
+                        this.result = parseInt(this.d1) / parseInt(this.d2);
+                        break;
+                }
+                // 注意：这是投机取巧的方式，正式开发中，尽量少用
+                // var codeStr = 'parseInt(this.d1) ' + this.opt + ' parseInt(this.d2)';
+                // this.result = eval(codeStr);
+            },
+            boxHanlder: function () {
+                console.log("黄色div boxHanlder")
+            },
+            capture() {
+                console.log("第二层灰色div capture")
+            },
+            son() {
+                console.log("内层粉色div")
+            },
+            divHanlder() {
+                console.log('wrapper');
+            },
+
+            inputHanlder: function () {
+                console.log('input_button');
+            },
+            aHanlder: function () {
+                console.log('a href')
+            },
+            btnClick: () => {
+                console.log('button');
+            }
+        }
+    })
+</script>
+
+</html>

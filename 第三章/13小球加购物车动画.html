@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>复习小球加购物车动画</title>
+    <script src="../js/vue.js"></script>
+    <style>
+    .ball{
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        border-radius: 50%;
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <button @click="flag=!flag">点击</button>
+        <transition
+        @before-enter="beforeEnter"
+        @enter="enter"
+        @after-enter="afterEnter" 
+        >
+            <div class="ball" v-show="flag">
+            </div>
+        </transition>
+    </div>
+</body>
+<script>
+var vm = new Vue({
+        el:"#app",
+        data:{
+            flag:false,
+        },
+        methods:{
+            beforeEnter:function(el){
+                el.style.transform='translate(0,0)';
+            },
+            enter(el,done){
+                el.offsetWidth
+                el.style.transform='translate(150px,450px)';
+                el.style.transition="all 1s ease";
+                done()
+            },
+            afterEnter(el){
+                console.log(1)
+                this.flag=!this.flag;
+                // el.style.opacity=0 //这样不行，下次flag是true，不会执行动画
+
+                 // 起始是false->点完，上半场是true->最后改为false,才能进行下次点击
+            }
+        }
+    })
+
+</script>
+</html>

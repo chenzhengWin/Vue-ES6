@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>oninput.onchange</title>
+    <style>
+    p{
+        white-space: pre-line;
+    }
+    </style>
+</head>
+
+<body>
+    <p> oninput 事件在用户输入时触发。
+        该事件在 input 或 textarea 元素的值发生改变时触发。
+        提示： 该事件类似于 onchange 事件。不同之处在于 oninput 事件在元素值发生变化是立即触发， onchange 在元素失去焦点时触发。
+        另外一点不同是 onchange 事件也可以作用于 <keygen> 和 select 元素。
+    </p>
+       
+    <div id="dd">oninput事件</div>
+    <input type="text"> 
+    <div id="dd2">onchange事件</div>
+    <input type="text" value="input2" onchange="inp2()"> 
+    <!-- oninput="inpu()" -->
+</body>
+<script>
+    var inp = document.getElementsByTagName("input")[0];
+    // inpu = function () {
+    //     document.getElementById("dd").innerHTML = "你输入的是" + inp.value;
+    //     console.log(1)
+    //     console.log(inp.value);
+    // }
+    inp.addEventListener("input",function(){
+        document.getElementById("dd").innerHTML="你输入的是"+inp.value;
+        console.log(1)
+        console.log(inp.value);
+    });
+        var inpu2 = document.getElementsByTagName("input")[1];
+        inp2=function(){
+            document.getElementById("dd2").innerHTML="你输入的是"+inpu2.value;
+            console.log(2)
+            console.log(inpu2.value);
+        }
+</script>
+
+</html>

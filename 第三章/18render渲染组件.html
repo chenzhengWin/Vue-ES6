@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>render渲染组件t</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p>123</p>
+        <!-- <com1></com1> -->
+        
+    </div>
+</body>
+<script>
+    var login=Vue.extend({
+        template:"<h3>登录组件</h3>"
+    })
+    var vm=new Vue({
+        el:"#app",
+        data:{
+
+        },
+        // components:{com1:login},
+        render:function(createElements){
+            // createElements方法可以将组件渲染为html结构
+            return createElements(login);
+         // 注意：这里 return 的结果，会 替换页面中 el 指定的那个 容器，只显示组件的内容
+
+        }
+    })
+</script>
+</html>

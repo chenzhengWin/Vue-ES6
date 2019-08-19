@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组件里面的data</title>
+    <script src="../js/vue.js"></script>
+
+</head>
+<body>
+    <div id="app">
+       <mycom></mycom>
+    </div>
+    <!-- 在#app外面,使用template定义组件结构。推荐使用这种方法，标签有提示-->
+    <template id="temp1">
+      <h5>\(^o^)/~{{msg}}</h5> 
+    </template>
+</body>
+<script>
+    // 组件可以有自己的data数据，这里data是一个函数。返回值必须是对象
+    Vue.component('mycom',{
+        template:'#temp1',
+        data:function(){
+            // console.log(1) 报错
+            // 返回值必须是对象
+            return {
+                msg:'组件的私有的数据'
+            };
+        }
+    })
+   
+
+var vm = new Vue({
+        el:"#app",
+        data:{
+            
+        },
+        methods:{
+
+        }
+    })
+</script>
+</html>

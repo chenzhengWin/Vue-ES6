@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>component3 template标签 共有私有</title>
+    <script src="../js/vue.js"></script>
+
+</head>
+<body>
+    <!-- app内部写组件名，外部写绑定是组件模板template -->
+    <div id="app">
+       <mycom3></mycom3>
+       
+    </div>
+    <!-- 在#app外面,使用template定义组件结构。推荐使用这种方法-->
+    <template id="temp1">
+        <!-- 还是只能有一个根元素 -->
+        <div>
+            <h3>div#app外面定义的</h3>
+            <span>123</span>
+            <ul>
+                <li>li</li>
+                <li>li</li>
+            </ul>
+        </div>
+    </template>
+
+    <div id="app2">
+        <!--mycom3全局组件  -->
+       <mycom3></mycom3>
+       <!-- 私有组件mycom template:'#temp2'-->
+       <mycom></mycom>
+    </div>
+    <template id="temp2">
+        <!-- 还是只能有一个根元素 -->
+        <div>
+            <h3>div#app外面定义的</h3>
+            <span>333</span>
+            
+        </div>
+    </template>
+    
+</body>
+<script>
+    // 全局
+    Vue.component('mycom3',{
+        template:'#temp1'
+    })
+   
+
+var vm = new Vue({
+        el:"#app",
+        data:{
+            
+        },
+        methods:{
+
+        }
+    })
+    var vm2 = new Vue({
+        el:"#app2",
+        data:{
+            
+        },
+        methods:{
+        },
+        filters:{},
+        directives:{},
+        components:{
+            mycom:{
+                template:'#temp2'
+            }
+        },
+        // 复习的
+        beforeCreate(){},
+        Created(){},
+        beforeMount(){},
+        Mounted(){},
+        beforeUpdate(){},
+        Updated(){},
+        beforeDestroy(){},
+        destoryed(){}
+    })
+</script>
+</html>

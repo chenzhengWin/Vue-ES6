@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>计算属性computed</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+        <xmp><a>超链接</a></xmp>
+    <div id="app">
+        Name:
+        <input type="text" v-model="firstname">+
+        <input type="text" v-model="lastname">=
+        <input type="text" v-model="fullname">
+        <br>
+        <!-- 改变它不会触发计算属性的fullname属性。里面没有用到它 -->
+        <input type="text" v-model="name">
+
+        <p>{{fullname}}</p>
+        <p>{{fullname}}</p>
+        <p>{{fullname}}</p>
+    </div>
+</body>
+<script>
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            firstname:'',
+            lastname:'',
+            name:'jane'
+        },
+        methods:{
+            
+        },
+        // 默认只有`getter`的计算属性：
+        computed:{
+            // 1.computed内的属性是计算属性，其实是一个方法，但调用的时候还按属性去调用，不能加（）
+            //2.所用的data中的相关数据发生变化，会触发这里的函数，重新计算这个计算属性的值
+            // 3. 属性的返回值会存储在缓存中，便于下次使用。绑定多个fullname时，只输入一个字时，只触发一次，看控制台。
+            // 在这里定义fullname.使用计算属性要有return
+            fullname:function(){
+                console.log("ok")//data中用到的数据改变时触发
+                return this.firstname+"-"+this.lastname
+            }
+        }
+    })
+</script>
+</html>

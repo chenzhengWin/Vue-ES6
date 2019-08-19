@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>复习组件传值</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        父组件的msg：{{msg}}
+        <br>
+        父组件的datafromSon：{{datafromSon}}
+        <!--第三章的 父组件向子组件传值：定义属性pmsg，子组件使用父组件的msg要绑定新的属性 -->
+        <!-- 子组件向父组件传值，定义一个方法。-->
+        <temp :pmsg="msg" v-on:func="getMsgfromSon"></temp>
+    </div>
+    <template id="tmp">
+        <div>
+            <!-- 子组件使用父组件的msg要绑定新的属性，子组件这里用新的属性名 -->
+            <p>Hello，w是子组件的元素----父msg：{{pmsg}}</p>
+            <input type="button" value="点击" @click="myclick">
+        </div>
+    </template>
+</body>
+
+<script>
+    // Vue.extend创建的是一个组件构造器
+    var temp1=Vue.extend({
+        template:"#tmp",
+        props:['pmsg'],
+        data(){
+            return{
+                msg:"子组件，我听你的话",
+            }
+        },
+        
+        methods:{
+            myclick(){
+                // 点击调用父组件获取值的方法，将自己的值传过去
+                this.$emit('func',this.msg)
+            }
+        }
+
+    });
+    //全局组件： Vue.component（“组件名”，组件模板）
+    // Vue.component("temp",temp1)
+
+
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            msg:'父组件中的，father，传值内容',
+            // 定义data中的数据，放子组件传入的数据
+            datafromSon:'',
+        },
+        methods:{
+            //定义一个获取子组件值的方法
+            getMsgfromSon(param){
+                // 将子组件的消息赋值给自己的data
+                this.datafromSon=param;
+                console.log(param);
+            }
+        },
+        components:{
+            // 属性名就是自定义的组件名，值是自定义的组件模板名
+            'temp':temp1,
+        }
+    })
+</script>
+</html>

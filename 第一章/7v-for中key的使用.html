@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-for</title>
+    <style>
+    [v-cloak]{
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <label for="id">id:</label>
+        <input type="text" v-model="id">
+        <label for="name">Name:</label>
+        <input type="text" v-model="name">
+        <!--  注意：add后面不加括号，否则就调用了-->
+        <input type="button" value="添加" v-on:click="add">
+        <!-- v-for渲染 key保证唯一性-->
+        <!-- key属性保证唯一，v-for循环时，只能使用number/string类型-->
+        <p v-for="item in list" :key="item.id">
+            <input type="checkbox">{{item.id}}--{{item.name}}
+        </p>
+    </div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            id: '',
+            name: '',
+            // 对象数组
+            list: [
+                { id: 1, name: "李四" },
+                { id: 2, name: "王五" },
+                { id: 3, name: "荀子" },
+            ]
+        },
+        methods: {
+            add: function () {
+                // push方法:在结尾添加数据；unshift方法：在开头添加数据
+                // 不写:key时
+                this.list.unshift({ id: this.id, name: this.name })
+            }
+        }
+    })
+</script>
+
+</html>

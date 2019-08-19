@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>class style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ok {
+            color: green;
+            font-size: 20px;
+        }
+
+        .error {
+            color: red;
+            padding: 10px;
+        }
+
+        .textInfo {
+            text-decoration: underline;
+        }
+
+        .div {
+            width: 300px;
+            height: 200px;
+            border: 1px solid #000;
+        }
+
+
+        #id {
+            margin: 0 auto;
+        }
+
+        .divUl {
+            width: 300px;
+            list-style: none;
+        }
+
+        .divUl li {
+            border: 1px solid #ccc;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="div">
+        <!-- 绑定属性写在内联里 -->
+        <p :class="{ok:f,'error':t}">旁边有小孩子</p>
+        <!-- 绑定属性不写在内联里 class=类名的变量名  -->
+        <p v-bind:class="dataClass">旁边有小孩子</p>
+        <!-- 计算属性 -->
+        <p v-bind:class="computedClass">旁边有小孩子</p>
+        <!-- 数组 class=[变量名1，...] -->
+        <p v-bind:class="[o,textInf]"> o:'ok', textInf:'textInfo'</p>
+        <!-- 三元运算符,均为data里的属性名，如果不为true,类名textInf一直在 -->
+        <p v-bind:class="[isActive? o:'',textInf]"> 三元运算符</p>
+    </div>
+
+    <div id="sty">
+        <!-- :style{内联样式}，直接写{属性名：属性值}.记得给属性名用驼峰法或加引号 -->
+        <div v-bind:style="{margin:'30px auto',width:'200px',height: '100px',background:'lightgreen'}">
+            {{content}}
+        </div>
+        <!-- 内联写法：{属性名：属性值的变量名，...} 注意属性名要用驼峰法，或有短横线时加引号-->
+        <div v-bind:style="{width:w,background:bg, color: Color, 'font-Size': fontSize }">123</div>
+        <!-- v-bind:style="类名"
+             直接绑定到一个样式对象通常更好，这会让模板更清晰 -->
+        <div v-bind:style="mystyle">123直接绑定到一个样式对象通常更好，这会让模板更清晰</div>
+
+        <div v-bind:style="[mystyle,mystyle2]">直接绑定到一个样式对象通常更好,数组语法,添加多个样式对象</div>
+
+        <div>
+            <!-- ul>li{$hello}*3  ul>li{hello}*3-->
+            <ul :class="uu"
+                :style="{background:bg, display: ['-webkit-box', '-ms-flexbox', 'flex'],'justify-content':jc}">
+                <li>1hello</li>
+                <li>2hello</li>
+                <li>3hello</li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    // class 绑定
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            isActive: true,
+            f: false,
+            t: true,
+
+            // 类名变量：具体类名
+            o: 'ok',
+            textInf: 'textInfo',
+
+            dataClass: {
+                ok: true,
+                textInfo: true,
+            },
+
+        },
+        computed: {
+            computedClass: function () {
+                return {
+                    ok: this.t,
+                    'text-info': this.f && this.f.type === 'fatal',
+                }
+            }
+        }
+    })
+
+    // style
+    var mv2 = new Vue({
+        el: "#sty",
+        data: {
+            content: ':style{内联样式}，直接写{属性名：属性值}.记得给属性名用驼峰法或加引号',
+            // style绑定，内联写法，属性值的变量后面是值
+            Color: 'white',
+            fontSize: '14px',
+            w: '150px',
+            bg: 'red',
+            uu: 'divUl',
+            flex: 'flex',
+            jc: 'space-between',
+            // 直接绑定的样式对象
+            mystyle: {
+                width: '200px',
+                // height:'100px',
+                background: '#281',
+                'font-family': '楷体',
+                marginTop: '5px'
+            },
+            mystyle2: {
+                color: '#fff',
+                // 涉及到浏览器前缀问题，vue会自动侦测并添加
+                // tranform translate 脱离文档流
+                transform: 'translateX(20px) translateY(5px)'
+            }
+
+
+        }
+    })
+</script>
+
+</html>

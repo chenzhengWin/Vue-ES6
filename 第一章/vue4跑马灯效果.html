@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<!-- 1、导入Vue包 -->
+	<script type="text/javascript" src="js/vue.min.js"></script>
+</head>
+<body>
+	<!-- 2、创建一个要控制的区域 -->
+
+	<div id="app">
+		<input type="button" value="跑起来" v-on:click="dong">
+		<input type="button" value="停止" @click="stop">
+		<h4>{{msg}}</h4>
+	</div>
+
+	<script type="text/javascript">
+	
+	var vm=new Vue({
+		el:"#app",
+		data:{
+			msg:"河南科技大学软件学院！",
+			intervalId:null  //在data上定义定时器变量
+		},	
+		methods:{
+			dong:function(){
+				console.log(this.msg);
+				var _this=this;
+				if(this.intervalId!=null) return;
+				this.intervalId=setInterval(function(){
+                  // 获取到第一个字符
+				var start=_this.msg.substring(0,1);
+				// 获取后面的所有字符
+				var end=_this.msg.substring(1);
+				_this.msg=end+start;
+				},400)
+				
+			},
+			stop:function(){
+				clearInterval(this.intervalId);  //清除定时器，并不是置为null
+				this.intervalId=null;
+			}
+		}
+	})
+	// 分析：
+	// 1、给"动起来"按钮绑定一个点击事件，v-on:或@
+	// 2、在按钮的事件处理函数中写相关的业务逻辑代码：获取msg中的字符串，然后调用字符串的substring来进行字符串的获取操作，把第一个字符截取出来，放到最后一个位置即可；
+	// 3、为了实现单击下按钮，自动获取的功能，需要将2步骤中的代码放到一个定时器中去
+	</script>
+</body>
+</html>

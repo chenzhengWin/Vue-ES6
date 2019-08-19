@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>品牌列表</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<style>
+[v-cloak]{
+    display: none;
+}
+</style>
+<body>
+    <!--知识点：
+         
+    -->
+    <div id="app">
+        <p v-color="'red'" v-cloak>{{msg}}</p>
+        <input type="button" value="点击修改msg" @click="msg='修改OK'">
+        <div v-fontsize="'20px'" v-color="'pink'">
+            字体20px
+        </div>
+        <div v-fontsize="30" v-color="'blue'">
+            字体30 parseInt(30)+'px'
+        </div>
+        <!-- 自定义指令 -->
+        <input type="text" v-focus>
+    </div>
+
+</body>
+<script src="js/vue.js"></script>
+<script>
+    
+    
+    Vue.directive('color',{
+        // 三个钩子函数，都是可选
+        bind:function(el,binding){
+            // el.style.color="red";
+            // 和样式相关的操作，一般都可以在bind执行
+            // console.log(binding.name)//color
+            // console.log(binding.value)//blue
+            // console.log(binding.expression)//表达式 'blue'
+            el.style.color=binding.value;
+        },
+        inserted:function(el){
+            
+        },
+        updated:function(el){
+
+        }
+    })
+    
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            
+            msg:'河南',
+           
+        },
+        methods: {
+           show(){
+               console.log("show方法");
+               return 1;
+           }
+        },
+        // 第一个声明周期函数 data和methods都还未被初始化
+        beforeCreate(){
+            // console.log(this.msg);//undefined
+            // console.log(this.show());//show() is not a function
+        },
+        // 第二个生命周期函数 data和methods 已经初始化，对vue最早操作的
+        created(){
+            console.log(this.msg);
+            console.log(this.show());
+        },
+        // 第三个 模板在内存中已编辑好，但还未挂载渲染到浏览器页面，
+        beforeMount(){
+            // 页面内容还未替换过来，还是模板字符 {{msg}}
+            console.log(document.getElementsByTagName("p")[0].innerText)
+            
+        },
+        // 第四个 内存中的模板已经挂载到了页面中，用户可以看到渲染好的页面
+        // 最早在mounted里面操作dom
+        mounted(){ 
+            console.log(document.getElementsByTagName("p")[0].innerText)//河南
+
+        },
+
+        //发生修改时， 运行中的两个事件:        
+        beforeUpdate(){
+            // 更改data中的数据之后，data中的是新的，页面数据还未更改，还未渲染到页面中，
+            console.log("beforeUpdate:页面上的数据，旧的msg："+document.getElementsByTagName("p")[0].innerText)//河南
+            console.log('data中的数据msg（已修改）：'+this.msg)
+        },
+        updated(){
+            // 该事件执行之后，页面和data的数据都是最新的
+            console.log("updated：页面上的数据，msg(已修改)："+document.getElementsByTagName("p")[0].innerText)//河南
+            console.log('data中的数据msg（已修改）：'+this.msg)
+        },
+
+        // 私有自定义指令
+        directives:{
+            // 定义时不加v- 前缀,调用时加v-
+            'fontsize':{
+                bind:function(el,binddaa){
+                    el.style.fontSize=parseInt(binddaa.value)+'px';
+                   
+                }
+            },
+            'focus':{
+                inserted(el){
+                    el.focus();
+                }
+            }
+        }
+    })
+
+    /*系统提供的按键修饰符 enter  */
+    // 自定义全局按键修饰符
+    Vue.config.keyCodes.f2 = 113 //f2的keycode是113
+
+   
+    // document.getElementById("search")
+</script>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    var arr = [1, 12, 10, 110, 45];
+    console.log(arr.sort())// [1, 10, 110, 12, 45]
+    var result = arr.sort(function (a, b) {
+        return a - b;
+    })
+    console.log(result);// [1, 10, 12, 45, 110]
+
+    var hanzi = ["哥哥", "姐姐", "弟弟", "妹妹","家庭"]
+    var result2 = hanzi.sort((a, b)=> {
+        return a.localeCompare(b);
+    })
+    console.log(result2)// ["弟弟", "哥哥", "家庭", "姐姐", "妹妹"]
+</script>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 引入 -->
+    <link rel="stylesheet" href="../css/animate.css">
+    <!-- 入场bounceIn bounceOut 
+    enter-active-class="animated bounceIn"
+    leave-active-class="animated bounceOut"
+    -->
+    <script src="../js/vue.js"></script>
+    <style>
+
+    </style>
+</head>
+
+
+<body>
+    <div class="" id="app">
+        <button v-on:click="flag=!flag">
+            toggle
+        </button>
+        <!-- 1. transition元素 官方提供的，把需要进行动画的元素包裹起来-->
+        <!-- 要加animated 可以加transition上面，也可以加动画元素上面 统一设置duration:200毫秒-->
+        <transition
+         enter-active-class="animated bounceIn"
+          leave-active-class="animated bounceOut"
+        :duration="200">
+            <h3 v-if="flag">显示/不显示</h3>
+        </transition>
+        <hr>
+        <button v-on:click="flag2=!flag2">
+                toggle2
+         </button>
+        <!-- animated加在动画元素上 分别设置入场出场的时间 -->
+        <transition
+            enter-active-class="bounceIn"
+            leave-active-class="bounceOut"
+            :duration="{enter:200,leave:600}">
+            <h2 class="animated" v-if="flag2">显示/不显示</h2>
+        </transition>
+
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            flag: false,
+            flag2:true,
+        },
+        methods: {
+
+        }
+    })
+</script>
+
+</html>

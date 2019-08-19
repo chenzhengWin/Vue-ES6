@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+</head>
+
+<body>
+    <input type="text" id="inp" />
+    <div id="box"></div>
+</body>
+<script>
+// 
+    let obj = {};
+    let oInp = document.getElementById('inp');
+    let oBox = document.getElementById('box');
+    /* 
+    Object.defineProperty() 方法
+    会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。
+    */
+    Object.defineProperty(obj, 'name', {
+        configurable: true,//属性可以改变，同时该属性也能从对应的对象上被删除。默认为 false
+        enumerable: true,//当且仅当该属性的enumerable为true时，
+        // 该属性才能够出现在对象的枚举属性中。默认为 false。
+        get: function () {
+            console.log(111);
+    // console.log(obj.name)
+
+            return oInp.value;
+        },
+        set: function (newVal) {
+            // console.log(newVal+"===")
+            oInp.value = newVal;
+            oBox.innerHTML = newVal;
+        }
+    });
+    oInp.addEventListener('input', function (e) {
+        // console.log(e.target.value);
+        obj.name = e.target.value;//设置name的值，触发set方法。
+    });
+    obj.name = '苏日俪格';
+    obj.age='12'
+    console.log(obj.name)//获取值的时候调用get;
+    console.log(obj.age)
+</script>
+
+</html>

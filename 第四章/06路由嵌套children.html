@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>路由嵌套</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router-3.0.1.js"></script>
+</head>
+<style>
+    .router-link-active{
+        font-size: 20px;
+        text-decoration: none;
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <div id="app">
+        <router-link to="/contentPath?id=12">content</router-link>
+        <router-view></router-view>
+    </div>
+    <template id="temp">
+        <div>
+            <p>{{$route.query.id}}</p>
+            <!-- /父路由路径/子路由路径 -->
+            <router-link to="/contentPath/login">登录</router-link>
+            <router-link to="/contentPath/register">注册</router-link>
+            <router-view></router-view>
+        </div>        
+    </template>
+</body>
+<script>
+    var content={template:"#temp"};
+    var login={template:'<h3>登录的内容</h3>'};
+    var register={template:'<h3>注册的内容</h3>'};
+
+    var route=new VueRouter({
+        // 只有这个地方不加r
+        routes:[
+            // 这里组件名不能是字符串，即不能加引号，会报错
+            {
+                path:"/contentPath",
+                component:content,
+                children:[
+                    // 当/contentPath/:id匹配成功，下面两个子路由会被渲染到contentPath中
+                    // 注意:为了让用户清楚路由的地址，子路由的开头位置，不/ 路径符，并在to属性中加/contentPath
+                    {path:'login',component:login}, 
+                    {path:'register',component:register},
+                ],
+            },
+            // {path:"/loginPath",component:"login"},
+        ],
+       
+    })
+var vm=new Vue({
+    el:"#app",
+    data:{},
+    router:route,
+})
+</script>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>07</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router-3.0.1.js"></script>
+</head>
+<style>
+    *{
+        margin:0;
+        padding: 0;
+    }
+    .header{
+        background:yellow;
+        height: 100px;
+    }
+    .content {
+        display: flex;
+        height:300px;
+    }
+    .left{
+        flex: 3;
+        background: green;
+    }
+    .main{
+        flex:7;
+        background: pink;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <router-view></router-view>
+        <div class="content">
+            <!-- 如果不写name,会全部都是header -->
+            <!--name是普通属性（前面没有加冒号，不用考虑是值还是字符串）。 aleft,amain是字符串 -->
+            <router-view name="aleft"></router-view>
+            <router-view name="amain"></router-view>
+        </div>
+
+    </div>
+</body>
+<script>
+    var header = { template: '<h3 class="header">header</h3>' }
+    var leftBox = { template: '<h3 class="left">left</h3>' }
+    var mainBox = { template: '<h3 class="main">main</h3>' }
+    // 创建路由对象
+    var router = new VueRouter({
+        routes: [
+            {
+                path: '/', 
+                components: {
+                    // components: { [name: string]: Component }; // 命名视图组件
+                    'default':header,
+                    'aleft':leftBox,
+                    'amain':mainBox
+                }
+            }
+        ]
+
+    });
+    var vm = new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        router,
+    })
+</script>
+
+</html>

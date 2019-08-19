@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-for</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 值在前，索引在后面 -->
+        <!-- 普通数组 -->
+
+        <p v-for="(item,index) in list">数组每一项：{{item}}-------索引：{{index}}</p>
+        <!-- 对象数组 user即item-->
+        <p v-for="(user,index) in users">--对象数组item：{{user}}--{{user.name}}-----{{user.id}}----索引:{{index}}</p>
+        <p v-for="item in msgs">{{item.msg}}</p>
+        <!-- 普通对象 -->
+        <p v-for="(val,key,index) in student">值：{{val}}---键：{{key}}-----索引:{{index}}----</p>
+
+        <p v-for="value in student">
+            {{ value }}
+        </p>
+
+
+
+        <!-- 有数字迭代时，从1开始 -->
+        <p v-for="num in 5">第{{num}}次循环</p>
+    </div>
+
+</body>
+<script src="../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+
+            list: [1, 2, 3, 4, 5, 6],
+            // 对象数组
+            msgs: [
+                { msg: 'foo' },
+                { msg: 'bar' }
+            ],
+            users: [
+                { id: 1, name: 'zhangsan1' },
+                { id: 2, name: 'zhangsan2' },
+                { id: 3, name: 'zhangsan3' }
+            ],
+            // 对象
+            student: {
+                stuNo: 1,
+                name: '陈',
+                age: 23
+            },
+
+        }
+    })
+</script>
+
+</html>

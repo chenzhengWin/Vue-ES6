@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>品牌列表</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<style>
+[v-cloak]{
+    display: none;
+}
+</style>
+<body>
+    <!--知识点：
+         添加 查找 删除 过滤器 按键修饰符 自定义指令（全局，私有）
+    -->
+    <div id="app" :style="wrap">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label for="">
+                    Id:
+                    <input type="text" class="form-control" v-model="id">
+                </label>
+                <label for="">
+                    Name:
+                    <!-- @keyup.enter='add'按键修饰符触发add -->
+                    <!-- <input type="text" class="form-control" v-model="name" @keyup.enter='add'> -->
+                    <!-- f2是自定义的按键修饰符 按f2可以添加-->
+                    <input type="text" class="form-control" v-model="name" @keyup.f2.enter='add' v-color="'blue'">
+                </label>
+                <input type="button" value="添加" @click="add">
+                <label for="">
+                    关键字:<!--自定义指令 v-focus  -->
+                    <input id="search" type="text" class="form-control" v-model="keywords" v-focus>
+                </label>
+                <!-- <input type="button" value="搜索" @click="search(item.keywords)"> -->
+            </div>
+        </div>
+
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Ope</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in search(keywords)" :key="item.id">
+                    <td v-text="item.id"></td>
+                    <!--v-text指令里面不用{{}}-->
+                    <td>{{item.name}}</td>
+                    <!-- 管道符 加过滤器格式化一下日期 -->
+                    <td>{{item.addTime | formatTime('yyyy-mm-dd') }}</td>
+                    <!--转化为含有时分秒的了-->
+                    <!--<td>{{item.addTime | formatTime() }}</td>-->
+                    <!-- 阻止默认行为 -->
+                    <td><a href="javascript:;" @click.prevent="del(item.id)">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p v-color="'red'" v-cloak>{{msg}}</p>
+        <div v-fontsize="'20px'" v-color="'pink'">
+            字体20px
+        </div>
+        <div v-fontsize="30" v-color="'blue'">
+            字体30 parseInt(30)+'px'
+        </div>
+    </div>
+
+</body>
+<script src="js/vue.js"></script>
+<script>
+     // 格式化日期函数
+     function formatDate(d) {
+        return d > 10 ? d : d.toString().padStart(2, '0');//字符串前面补0
+    }
+    // 全局过滤器
+    Vue.filter('formatTime', function (timestr, pattern) {
+        var date = new Date(timestr);
+        // console.log(date)
+        var y = date.getFullYear();
+        var m = formatDate(date.getMonth() + 1);
+        var d = formatDate(date.getDate());
+         //如果有参数且是'yyyy-mm-dd' 格式
+        if (pattern && pattern.toLowerCase() === 'yyyy-mm-dd') {
+            return `${y}-${m}-${d}`;
+        }
+         //如果没有参数 化为年月日时分秒
+        else {
+            var hour = formatDate(date.getHours());
+            var min = formatDate(date.getMinutes());
+            var sec = formatDate(date.getSeconds());
+            return `${y}-${m}-${d}  ${hour}时${min}分${sec}秒`;
+        }
+    })   
+     //全局 自定义指令  Vue.directive定义 v-focus，定义时不加v- 前缀,调用时加v-
+     Vue.directive('focus',{
+        bind:function(el){
+
+        },
+        // 和事件相关写在inserted里面
+        inserted:function(el){
+            el.focus();
+        },
+        updated:function(el){
+
+        }
+    })
+    Vue.directive('color',{
+        bind:function(el,binding){
+            // el.style.color="red";
+            // 和样式相关的操作，一般都可以在bind执行
+            console.log(binding.name)//color
+            console.log(binding.value)//blue
+            console.log(binding.expression)//表达式 'blue'
+            el.style.color=binding.value;
+        },
+        inserted:function(el){
+            
+        },
+        updated:function(el){
+
+        }
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            id: "",
+            name: '',
+            keywords: '',
+            msg:'河南',
+            wrap: {
+                margin: '10px',
+            },
+            list: [
+                { id: '1', name: 'aa', addTime: new Date() },
+                { id: '2', name: 'bb', addTime: new Date() },
+                { id: '3', name: 'ba', addTime: '2018-7-8' },
+                { id: '4', name: 'ac', addTime: '2018-7-8' },
+            ],
+        },
+        methods: {
+            add: function () {
+                // console.log("ok");
+                var car = { id: this.id, name: this.name, addTime: new Date() };
+                // debugger;
+                /* typeof null为"object"
+                typeof ""  为"string" 
+                ""==null 为 false */
+                // if(car.id.trim()==""||car.name.trim()==""){
+                    // 如果不满足正则
+                if(!/\s/.test(car.id)||!/\s/.test(car.name)){  
+                    alert('id和name不能为空')
+                    return;
+                }
+                this.list.push(car);
+                this.id = this.name = "";
+            },
+            //1.通过id找索引
+            // 2.
+            del(id) {
+                // splice() 方法用于添加或删除数组中的元素,返回删除掉的元素的数组。这种方法会改变原始数组。
+
+                /* some() 方法会依次执行数组的每个元素：
+                如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测。
+                如果没有满足条件的元素，则返回false。 */
+
+                this.list.some(
+                    (item,index)=>{
+                    if(item.id==id){
+                        // 传index,从当前位置删一个
+                        this.list.splice(index,1);
+                    }
+                })
+                // 方法二
+                // let index = this.list.findIndex(
+                //     (item) => {
+                //         if (item.id == id) {
+                //             return true;
+                //         }
+                //     })
+                // // console.log(index) //找到索引
+                // this.list.splice(index, 1)
+                
+                // 方法三
+                // this.list.filter((item,index)=>{
+                //     if(item.id==id)
+                //     {
+                //         this.list.splice(index,1)
+                //     }
+                // })
+            },
+            //变量name为关键字
+            /* 数组新方法：forEach,some,findIndex,filter */
+            search(keywords) {
+                /*filter() 方法创 建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+                注意： filter() 不会对空数组进行检测。
+                注意： filter() 不会改变原始数组。 */
+                return this.list.filter(item => {//item是变量，为list的每一项
+                    // if (item.name.includes(keywords)) {
+                    if (item.name.indexOf(keywords)!=-1) {
+                        //filter中函数的返回值
+                        // var reg='/^'+keywords+'$/g';
+                        // item.name.replace(reg,"<span style='background-color: yellow;color:red'>"+keywords+"</span>")
+                        return item;
+                    }
+                })
+
+                // 搜索到的对象数组,item为数组的每一项
+                // var newList = [];
+                /* this.list.forEach(item => {
+                    if (item.name.includes(keywords)) {
+                       newList.push(item)
+                    }
+                }); */
+
+                /* this.list.some(item=>{
+                    if(item.name.indexOf(keywords)!=-1){
+                        newList.push(item)
+                    }
+                }) */
+
+                /* this.list.findIndex(item=>{
+                    if(item.name.indexOf(keywords)!=-1){
+                       newList.push(item)
+                    }
+                }) */
+                //return newList;
+            },
+
+        },
+        // 私有自定义指令
+        directives:{
+            // 定义时不加v- 前缀,调用时加v-
+            'fontsize':{
+                bind:function(el,binddaa){
+                    el.style.fontSize=parseInt(binddaa.value)+'px';
+                    console.log(binddaa.name)
+                    console.log(binddaa.value)
+                }
+            }
+        }
+    })
+
+    /*系统提供的按键修饰符 enter  */
+    // 自定义全局按键修饰符
+    Vue.config.keyCodes.f2 = 113 //f2的keycode是113
+
+   
+    // document.getElementById("search")
+</script>
+
+</html>

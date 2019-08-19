@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="utf-8">
+	<script src="vue.min.js"></script>
+	<title></title>
+	<style type="text/css">
+		.p0{
+			color: red;
+		}
+		.pf{
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+<div id="box">
+	<input type="text" name="username" v-model="uname">
+	{{uname}}
+	<br>
+	<input type="checkbox" name="hobby" value="篮球" v-model="hobby">篮球
+	<input type="checkbox" name="hobby" value="足球" v-model="hobby">足球
+	<input type="checkbox" name="hobby" value="羽毛球" v-model="hobby">羽毛球
+	<input type="checkbox" name="hobby" value="跑步" v-model="hobby">跑步
+	{{hobby}}
+	<hr>
+	<p>全选/全不选:</p>
+	<input type="checkbox" name="hobby" value="篮球" v-model="hobby1">篮球
+	<input type="checkbox" name="hobby" value="足球" v-model="hobby1">足球
+	<input type="checkbox" name="hobby" value="羽毛球" v-model="hobby1">羽毛球
+	<input type="checkbox" name="hobby" value="跑步" v-model="hobby1">跑步
+	{{hobby1}}
+	<br>
+	
+</div>
+<script>
+	new Vue({
+		el:"#box",
+		data:{
+			uname:'张三',
+			hobby:[],
+			hobby1:''
+		}
+	})
+</script>
+</body>
+</html>

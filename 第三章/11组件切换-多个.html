@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>可以放多个组件切换</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 可以在登录注册之间切换 
+            点击登录，组件为login，点击注册，组件为register -->
+       <a href="#" @click.prevent="comName='login'">登录</a>
+       <a href="#" @click.prevent="comName='register'">注册</a>
+
+        <!-- 要加单引号，代表表达式,不是字符串login -->
+        <!-- <component :is="'login'"> </component>
+        <component :is="'register'"> </component> -->
+
+        <!-- :is=" "放一个变量;作为标签名时不能用驼峰命名-->
+        <component :is="comName"> </component>
+        <p>Vue提供的component标签，展示对应名称的组件</p>
+    </div>
+</body>
+<script>
+   Vue.component('login',{
+       template:'<h5>登录组件，</h5>',
+   })
+   Vue.component('register',{
+       template:'<h5>注册组件。</h5>',
+   })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            // 这里不用flag
+            comName:'login',
+        },
+        methods: {
+
+        }
+    })
+</script>
+</html>

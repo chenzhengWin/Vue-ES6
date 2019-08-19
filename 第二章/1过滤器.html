@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>过滤器的使用</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 有两个过滤器 -->
+        <p>{{msg | msgFormat('aa','bb+1') |test}}</p>
+    </div>
+    <div id="app2">
+        {{msg1 | msgFormat }}
+    </div>
+</body>
+<script src="./js/vue.js"></script>
+<script>
+    // <!--全局过滤器 写在vue实例之前-->
+    Vue.filter('msgFormat', function (msgarg0,arg1,arg2) {
+        if (!msgarg0) return '';
+        // return msgarg0.replace(/a/g, 'an');
+
+        return msgarg0.replace(/a/g, arg1+arg2);
+
+    });
+    //上一个过滤器执行完，在上一个的基础上继续执行这个
+    Vue.filter('test',function(argu){
+        return argu.charAt(0).toUpperCase()+argu.slice(1);
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            msg: "he is a handsome boy,a college student,a programmer",
+
+        },
+    })
+    // console.log(typeof undefined)//undefined
+    // console.log(typeof null)//object
+    var vm2 = new Vue({
+        el: "#app2",
+        data: {
+            msg1: "He is a handsome boy,a college student,a programmer",
+        },
+        filters:{
+            msgFormat:function(argmsg1){
+                if (!argmsg1) return ''
+                // console.log(typeof argmsg1)//string
+                return argmsg1.toUpperCase();
+            }
+        },
+    })
+
+//    私有过滤器
+
+</script>
+
+</html>

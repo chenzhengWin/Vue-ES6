@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+
+</head>
+<style>
+    li {
+        height: 30px;
+        line-height: 30px;
+        padding-left: 5px;
+        font-size: 12px;
+        border: 1px solid #ddd;
+        margin-top: 5px;
+    }
+
+    li:hover {
+        background: pink;
+        font-family: "仿宋";
+        font-size:20px;
+        transition: all 1s;
+    }
+    /* 2.设置li的动画状态 */
+    .v-enter,
+    .v-leave-to {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+        transition: all 0.6s ease;
+    }
+    /* 删除后，下面元素移动时的动画，让下面的元素渐渐移动上来*/
+    .v-move{
+        transition: all 0.6s ease;
+    }
+    /* 要和v-move配合使用，v-move才起效 */
+    .v-leave-active {
+        position: absolute;
+        width:100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <label for="">Id:
+            <input type="text" v-model="id">
+        </label>
+        <label for="">Name:
+            <input type="text" v-model="name">
+        </label>
+        <button @click="add">添加</button>
+        <!-- <ul> -->
+            <!--1. v-for循环渲染出来的，要通过transition-group包裹 要添加一个key属性-->
+            <!--特性 加appear 元素进入页面的入场效果 
+            在ul标签下，transition-group会被渲染为span标签，不符合w3c标准
+            添加tag属性=指定transition-group渲染为目标标签，
+            不指定默认渲染为span
+            -->
+            <transition-group appear tag="ul">
+                    <!-- del(传入的item.id) -->
+                <!-- <li v-for="item in list" :key="item.id" v-on:click="del0(item.id)"> -->
+                    <!-- del传入索引index -->
+                <li v-for="(item,index) in list" :key="item.id" v-on:click="del(index)">
+                    {{item.id}}--{{item.name}}
+                </li>
+            </transition-group>
+        <!-- </ul> -->
+    </div>
+</body>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            id: "",
+            name: "",
+            list: [
+                { id: 1, name: '诸葛亮' },
+                { id: 2, name: "曹操" },
+                { id: 3, name: "刘备" },
+                { id: 4, name: "张宇" },
+
+            ],
+        },
+        methods: {
+            add() {
+                this.list.push({ id: this.id, name: this.name });
+                this.id = this.name = ""
+            },
+            // 两种删除方法
+            del(i) {
+                this.list.splice(i, 1)
+            },
+            // 根据id删，先找索引再用splice方法删。推荐第一种方法
+            del0(id){
+                var _this=this; // console.log(this)//Vue               
+                // this.list.some(                    
+                //     function(item,index){
+                //     if(item.id==id){
+                //         // console.log(this)//window 触发的del0
+                //         // 箭头函数直接写this
+                //         _this.list.splice(index,1)
+                //     }
+                // })
+                this.list.filter(function(item,index){
+                    if(item.id==id){
+                        _this.list.splice(index,1)
+                    }
+                })
+            }
+        }
+    })
+</script>
+
+</html>

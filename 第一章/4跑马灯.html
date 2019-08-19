@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta charset="utf-8">
+	<script src="../js/vue.js"></script>
+	<title>跑马灯</title>
+	<script>
+
+	</script>
+</head>
+
+<body>
+	<div id="wrapper">
+		<input type="button" value="跑起来" v-on:click="run">
+		<input type="button" value="停止" @click="stop">
+		<p :title="mytitle">{{msg}}</p>
+		<div class="gund"></div>
+	</div>
+	<script>
+		var vm = new Vue({
+			el: "#wrapper",
+			data: {
+				msg: '河南科技大学软件学院',
+				interval: null,//定义的定时器变量
+				mytitle: "p元素",
+			},
+			methods: {
+				run: function () {
+					//这里的this表示new出来的vm实例对象
+					// console.log(this)//Vue
+					// console.log(this.msg);//河南科技大学软件学院
+
+					// 如果interval不为空（已经点击过），就return，即不能再点击，否则计时器会累加，越来越快
+					if (this.interval != null) return;
+					// setInterval中不能直接写this,指向的是window，这里赋值一下，指向vm全局
+					var _this = this;//vue实例					
+					this.interval = setInterval(function () {
+						// console.log(this)//window
+						// 截取字符串
+						var start = _this.msg.substring(0, 1);
+						var end = _this.msg.substring(1);
+						_this.msg = end + start;
+						// 注意，vm实例会监听自身data中所有数据的改变，
+						// 数据发生改变时，会同步最新的页面中。好处，只需要关心数据，不需要关心怎样重新渲染DOM到页面
+					}, 100)					
+					// console.log(this.interval)
+					//箭头函数写法:this指向上一级 setInterval(()=>{this.msg...})
+					// this.interval = setInterval( ()=>{
+					// 	// 截取字符串
+					// 	var start = this.msg.substring(0, 1);
+					// 	var end = this.msg.substring(1);
+					// 	this.msg = end + start;
+					// 	// 注意，vm实例会监听自身data中所有数据的改变，
+					// 	// 数据发生改变时，会同步最新的页面中。好处，只需要关心数据，不需要关心怎样重新渲染DOM到页面
+					// }, 100)
+				},
+				stop: function () {
+					clearInterval(this.interval);
+					// console.log(this.interval)
+					// 清除之后，设置为null,这样才能点开始
+					this.interval = null;
+				}
+			}
+		})
+		// vm会监听自己身上data的改变，发生改变时，会自动同步到页面。只需要关心数据
+	</script>
+</body>
+<script>
+	var gd = document.getElementsByClassName("gund")[0];
+	var text = "滚动的文字滚动的文字滚动的文字";
+	var arr = text.split("");
+	function fun() {
+		// 取开头元素，放末尾
+		arr.push(arr.shift());//shift()删除开头元素	
+		gd.innerHTML = arr.join('');
+		//不能这样写，因为text没有改变
+		// var begin=text.substring(0,1);
+		// var end=text.substring(1);
+		// var result=end+begin;
+		// // console.log(result)//定值
+		// gd.innerHTML=result;
+	}
+	setInterval(fun, 1000)
+
+// arr.unshift(arr.pop());/*删并获取末尾，添开头；方向向右滚动*/
+	/*pop()删除并返回最后一个元素；
+		unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。*/
+</script>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>从数据库获取列表</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <!-- 注意顺序 -->
+    <script src="../js/vue.js"></script>
+    <!-- 依赖于vue.js -->
+    <script src="../js/vue-resource-1.3.4.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label for="">
+                    Name:
+                    <input type="text" class="form-control" v-model="name">
+                </label>
+                <input type="button" class="form-control" value="添加" @click="add">
+            </div>
+        </div>
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Ope</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in list" :key='item.id'>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.addTime| formatTime("yyyy-mm-dd")}}</td>
+                    <td><a href="" @click.prevent="del(item.id)">删除</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+<script>
+    console.log(Math.PI*2)//6.283185307179586
+  
+     console.log(name);//undefined
+    let name;
+    // 全局配置根域名 注意：每次单独发起请求的时候，应以相对路径开头，前面不带斜杠
+    Vue.http.options.root='http://vue.studyit.io';
+    // 全局配置emulateJSON；post里面以表单提交时用的
+    // Vue.http.options.emulateJSON=true;
+    // 格式化日期函数
+    function formatDate(d) {
+        return d > 10 ? d : d.toString().padStart(2, '0');//字符串前面补0
+    }
+    // 全局过滤器
+    Vue.filter('formatTime', function (timestr, pattern) {
+        var date = new Date(timestr);
+        // console.log(date)
+        var y = date.getFullYear();
+        var m = formatDate(date.getMonth() + 1);
+        var d = formatDate(date.getDate());
+        //如果有参数且是'yyyy-mm-dd' 格式
+        if (pattern && pattern.toLowerCase() === 'yyyy-mm-dd') {
+            return `${y}-${m}-${d}`;
+        }
+        //如果没有参数 化为年月日时分秒
+        else {
+            var hour = formatDate(date.getHours());
+            var min = formatDate(date.getMinutes());
+            var sec = formatDate(date.getSeconds());
+            return `${y}-${m}-${d}  ${hour}时${min}分${sec}秒`;
+        }
+    })
+    var vue = new Vue({
+        http:{},
+        el: "#app",
+        data: {
+            name: '',
+            list: [
+                { id: '1', name: 'aa', addTime: new Date() },
+                { id: '2', name: 'ac', addTime: '2018-7-8' },
+            ]
+        },
+        methods: {
+            
+            getAlllist() {
+                //导入了resource的包 this.$http
+                // 参数 url,发送的数据，then回调
+                // 拿到返回成功的结果需要 result.body.status===0
+                this.$http.get("api/getprodlist").then(result => {
+                    var result = result.body;//请求获取的数据在body中
+                    if (reult.status === 0) {
+                        // 成功
+                        this.list = result.message;
+                    }
+                    else {
+                        alert("获取数据失败")
+                    }
+                })
+            },
+            add() {
+                // this.$http.post() 中接收三个参数：
+                //   2.1 第一个参数： 要请求的URL地址
+                //   2.2 第二个参数： 要提交给服务器的数据 ，要以对象形式提交给服务器 { name: this.name }
+                //   3.3 第三个参数： 是一个配置对象，要以哪种表单数据类型提交过去， { emulateJSON: true }, 
+                //   以普通表单格式，将数据提交给服务器 application/x-www-form-urlencoded
+                // 3. 在 post 方法中，使用 .then 来设置成功的回调函数，如果想要拿到成功的结果，需要 result.body
+
+                // 参数 url,发送的数据.表单格式，then回调
+                this.$http.post("api/addprodlist", { name: this.name }, { emulateJSON: true })
+                    .then(r => {
+                        result = r.body;
+                        if (result.status === 0) {
+                            // 添加成功后，手动调用一下getAlllist,刷新列表
+                            this.getAlllist()
+                            this.name = '';
+                        }
+                        else {
+                            alert("添加数据失败")
+                        }
+                    })
+            },
+            del() {
+                // get方式 传id
+                this.$http.get("api/delproduct/" + id).then(result => {
+                    if (result.body.status === 0) {
+                        this.getAlllist();
+                    } else {
+                        alert("删除失败")
+                    }
+                })
+            }
+        },
+
+        created() {//初始化结束，可以访问data，methods，vue实例自动执行
+            // 发送ajax应该尽早
+            this.getAlllist();
+        },
+    }) 
+</script>
+
+</html>

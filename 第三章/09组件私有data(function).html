@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组件里面的data</title>
+    <script src="../js/vue.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <counter></counter>
+        <counter></counter>
+
+    </div>
+    <!-- 在#app外面,使用template定义组件结构。推荐使用这种方法，标签有提示-->
+    <template id="temp1">
+        <div>
+            <!-- 绑定的组件的data返回的对象 -->
+            <h5>\(^o^)/~{{count}}</h5>
+            <!-- 自增 -->
+            <input type="button" value="点击自增1" @click="increment">
+        </div>
+
+    </template>
+</body>
+<script>
+    /* 组件中的data写成一个函数，
+       数据以函数返回值形式定义，这样每复用一次组件，就会返回一份新的data */
+    // 计数器
+    var dataObj = { count: 0 };
+    // 组件可以有自己的data数据，这里data是一个函数。返回值必须是对象
+    Vue.component('counter', {
+        template: '#temp1',//组件模板
+        data: function () {
+            console.log(1) 
+            // 返回值必须是对象
+            // return dataObj;//两个组件会互相影响，点击一个组件的另一个也自增。返回的是同一个对象
+            return  { count: 0 };//互不影响
+        },
+        methods: {
+            increment() {
+                this.count++;
+            }
+        },
+        directives:{},
+        filters:{}
+    })
+
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+
+        },
+        methods: {
+
+        }
+    })
+</script>
+
+</html>

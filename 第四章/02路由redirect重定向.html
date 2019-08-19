@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>路由重定向，设置激活样式</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router-3.0.1.js"></script>
+    <style>
+        /* vue-router提供的 */
+    .router-link-active{
+        background: lightskyblue;
+        font-size: 20px;
+    }
+    /* 手动设置，设置之后上面的不起作用 */
+    .myActive{
+        background: lawngreen;
+        font-size: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- to属性指定传入链接 -->
+        <router-link to="/login" tag="button">登录</router-link>
+        <router-link to="/register">注册</router-link>
+
+        <router-view></router-view>
+    </div>
+</body>
+<script>
+    // 1.导入包之后，定义模板对象
+    var login={
+        template:"<h3>hi，登录组件模板</h3>"
+    }
+    var register={
+        template:"<h3>hello,注册组件模板</h3>"
+    }
+    // 2.全局路由
+    // 变量也可以写在内部
+    var rou=[
+            //这里与node的不一样。这里是强制展示login组件，通过hash实现页面切换。将.html改为.html#/login
+            { path:'/',redirect:'/login'},
+            // component:只能是模板名(不加引号)，不是是组件名，组件名需要用于标签名
+            {path:'/login',component:login},
+            {path:'/register',component:register}
+        ];
+    var routerObj=new VueRouter({
+        // 属性：path、component
+        routes:rou,
+        linkActiveClass:'myActive',//手动设置激活类的样式
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+
+        },
+        methods: {
+
+        },
+        // 3.路由对象
+        router:routerObj,
+    })
+</script>
+</html>

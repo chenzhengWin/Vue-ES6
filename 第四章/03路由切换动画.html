@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设置路由切换动画</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router-3.0.1.js"></script>
+    <style>
+        /* vue-router提供的 */
+    .router-link-active{
+        background: lightskyblue;
+        font-size: 20px;
+    }
+    /* 手动设置，设置之后上面的不起作用 */
+    .myActive{
+        background: lawngreen;
+        font-size: 20px;
+    }
+    /* 动画 v-enter,v-enter-active,v-enter-to;
+            v-leave,v-leave-active,v-leave-to*/
+    /* 开始状态与结束状态 */
+    .tt-enter,.tt-leave-to{
+        opacity: 0;
+        transform:translateX(300px);
+    }
+    .tt-enter-active,.tt-leave-active{
+        transition: all 1s ease;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- to属性指定传入链接 -->
+        <router-link to="/login" tag="button">登录</router-link>
+        <router-link to="/register">注册</router-link>
+        <!-- 加transition设置动画 设置动画模式-->
+        <transition name="tt" mode="out-in">
+            <router-view></router-view>
+        </transition>
+    </div>
+</body>
+<script>
+    // 1.模板对象
+    var login={
+        template:"<h3>hi，登录组件模板</h3>"
+    }
+    var register={
+        template:"<h3>hello,注册组件模板</h3>"
+    }
+    // 2.全局路由
+    // 变量也可以写在内部。属性：path、component
+    var rou=[
+            //这里与node的不一样。这里是强制展示login组件，通过hash实现页面切换。将.html改为.html#/login
+            { path:'/',redirect:'/login'},
+            // component:只能是模板名(不加引号)，不是是组件名，组件名需要用于标签名
+            {path:'/login',component:login},
+            {path:'/register',component:register}
+        ];
+    var routerObj=new VueRouter({
+        // route不带r
+        routes:rou,
+        linkActiveClass:'myActive',//手动设置激活类的样式
+    })
+    var vm = new Vue({
+        el: "#app",
+        data: {
+
+        },
+        methods: {
+
+        },
+        // 3.路由对象
+        router:routerObj,
+    })
+</script>
+</html>

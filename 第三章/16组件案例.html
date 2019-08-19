@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>16component</title>
+    <script src="../js/vue.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 组件 将父组件的加载方法赋值给fun-->
+        <combox @fun="loadComments"></combox>
+
+        <ul class="list-group">
+            <li v-for="item in list" :key="item.id" class="list-group-item">
+                <span class="badge">评论人：{{item.user}}</span>
+                {{ item.content}}
+            </li>
+        </ul>
+    </div>
+
+    <template id="tmp1">
+        <div>
+            <div class="form-group">
+                <label>评论人：</label>
+                <input type="text" class="form-control" v-model="user">
+            </div>
+            <div class="form-group">
+
+                <label class="col-sm-2">评论内容</label>
+                <textarea class="form-control" name="" id="" cols="30" rows="10" v-model="content"></textarea>
+            </div>
+            <div class="form-group">
+                <!-- 点击执行函数 -->
+                <input type="button" value="发表" @click="postComment" class="btn btn-primary">
+            </div>
+        </div>
+    </template>
+</body>
+<script>
+    var combox = {
+        template: '#tmp1',
+        data() {
+            return {
+                user: '',
+                content: ''
+            }
+        },
+        methods: {
+            // 发表评论的函数
+            postComment() {
+                // 1.创建出新的评论对象
+                var comment = { id: Date.now(), user: this.user, content: this.content }
+                if (this.user.trim() == "" || this.content.trim() == "") {
+                    alert("内容不能为空")
+                }
+                else {
+                    // JSON.parse() 方法用于将一个 JSON 字符串转换为对象。
+                    // 2.获取localstorage的内容(它是字符串形式'[]')，所以要转化为json。coms是设置的key
+                    var list = JSON.parse(localStorage.getItem('coms') || '[]');
+
+                    // console.log(list,typeof list)//object
+                    // console.log(typeof localStorage.getItem('coms'))//string '[...]'
+                    // 3.把评论插入已有评论的顶部
+                    list.unshift(comment);
+                    // 4.保存到本地 localStorage只接受字符串类型 JSON.stringify()将对象转化为字符串
+                    localStorage.setItem('coms', JSON.stringify(list));
+                    this.user = this.content = "";
+                    // 添加到本地存储之后，要重新加载数据
+                    // 5.执行父组件的加载方法，刷新组件内容
+                    this.$emit("fun");
+                }
+            }
+        }
+    }
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            list: [
+                // {id:Date.now()+1,user:'李白',content:'天生我材必有用'},
+                // {id:Date.now()+2,user:'杜甫',content:'想不起来'},
+                // {id:Date.now()+3,user:'朱自清',content:'荷塘月色'}
+            ],
+        },
+        methods: {
+            // 加载评论的方法
+            loadComments() {
+                // 读取localstorage中的字符串数据，转化为Json格式
+                var list = JSON.parse(localStorage.getItem('coms') || '[]');
+                this.list = list;
+                // 补充：如果要清空本地存储
+                // localStorage.setItem("coms", "[]")
+            }
+        },
+        // 生命周期函数
+        created() {
+            // 执行加载方法
+            this.loadComments()
+        },
+        components: {
+            combox,
+        },
+    })
+</script>
+
+</html>

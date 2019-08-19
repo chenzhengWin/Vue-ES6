@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>可以放多个组件切换</title>
+    <script src="../js/vue.js"></script>
+    <style>
+    .v-enter,.v-leave-to{
+        opacity: 0;
+        transform: translateX(150px);
+    }
+    .v-enter-active,.v-leave-active{
+        transition:all 0.5s ease;
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 可以在登录注册之间切换 
+            点击登录，组件为login，点击注册，组件为register -->
+       <a href="#" @click.prevent="comName='login'">登录</a>
+       <a href="#" @click.prevent="comName='register'">注册</a>
+       <!-- mode属性，组件切换模式。先出再进 -->
+        <transition mode="out-in"> <!-- mode="in-out"先进再出 -->       
+            <component :is="comName"></component>
+        </transition>
+    </div>
+</body>
+<script>
+   Vue.component('login',{
+       template:'<h5>登录组件，</h5>',
+   })
+   Vue.component('register',{
+       template:'<h5>注册组件。</h5>',
+   })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            // 这里不用flag
+            comName:'login',
+        },
+        methods: {
+
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>onkeyup</title>
+    <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        Name:
+        <input type="text" v-model="firstname">+
+        <input type="text" v-model="lastname">=
+        <input type="text" v-model="fullname">
+    </div>
+</body>
+<script>
+    var vm=new Vue({
+        el:"#app",
+        data:{
+            firstname:'',
+            lastname:'',
+            fullname:'',
+        },
+        methods:{
+            
+        },
+        // 监听data中数据的改变，触发watch中对应的函数
+        watch:{
+            firstname:function(newval,lastval){
+                // console.log("监听到了firstname的改变")
+                // 方法一
+                // this.fullname=this.firstname+"-"+this.lastname;
+               
+                // 方法二
+                // 输出新值与旧值
+                // console.log(newval,lastval)
+                this.fullname= newval +"-"+this.lastname;
+            },
+            lastname:function(newval,old){
+                // 方法一
+                // this.fullname=this.firstname+"-"+this.lastname;
+                // 方法二
+                this.fullname=this.firstname +"-"+newval;
+            }
+        }
+    })
+</script>
+</html>

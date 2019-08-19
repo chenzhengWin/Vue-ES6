@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>15子组件调用父组件的方法</title>
+    <script src="../js/vue.js"></script>
+    <style>
+    
+    </style>
+</head>
+<body>
+    <!-- 子组件触发父组件获取子组件内容的方法，同时向父组件传值 -->
+    <div id="app">
+        <!-- 2. 把vue实例叫做父组件。
+            子组件定义一个方法func，为了触发父组件的show方法,不加括号，func是引用 -->
+        <com1 v-on:func="show"></com1>
+    </div>
+    
+    <template id="temp1">
+        <div>
+            <h3>组件1</h3>
+            <!-- 3.子组件中点击，触发父组件传递过来的func，在子组件com1中写-->
+            <button @click="myclick">点击，触发父组件传递过来的func</button>
+        </div>
+    </template>
+</body>
+<script>
+   
+    
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            // 1.定义data中的数据
+           datamsgFromson:null,//让子组件传数据过来
+        },
+        methods:{
+            // 1.定义一个方法，拿到子组件值的方法，t是子组件传入的
+            show(t){
+                console.log(t["name"]);
+                this.datamsgFromson=t;
+            }
+        },
+        // 私有组件
+        components:{           
+            com1:{              
+                template:'#temp1',  
+                data:function(){
+                    return {
+                        sonmsg:{"name":"lele",age:12,}
+                    };
+                },
+                methods:{                    
+                    myclick(){
+                        // 4. 
+                        // $emit触发，调用父组件传递过来的方法,同时将自己的data传参给父组件，
+                        // 也可以传其他数据
+                        this.$emit('func',this.sonmsg)
+                    }
+                },             
+            }
+        }
+    })
+
+</script>
+</html>

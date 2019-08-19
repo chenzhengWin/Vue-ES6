@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="utf-8">
+	<script src="../js/vue.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script> 也可以-->
+	<title></title>
+	<style type="text/css">
+		.p0{
+			color: red;
+		}
+		.pf{
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+<div id="box">
+	<h3 v-bind:clas="['p0','pf']">我是h3标题</h3>
+	<p v-bind:class="[item1,item2]">{{msg}}</p>
+	<p :class={p0:true,pf:false}>{{msg}}</p>
+	<p>{{1+8}}</p>
+	<p>{{1>0?'success':'error'}}</p>	
+	<a :href="url">百度</a><br>
+	<div v-bind:style="{margin:'30px auto',width:'200px',height: '100px',background:'lightgreen'}">
+		{{content}}
+	</div>
+	<!-- 对象语法 -->
+	<div :style="{width:w,height: h,background:bg}">
+		{{content}}
+	</div>
+
+	<div :style="css1">
+		{{content}}
+	</div>
+	<!-- 数组语法 -->
+	<div :style="[css1,border]">
+		{{content}}
+	</div>	
+</div>
+<!-- 将这个元素节点的 title 特性和 Vue 实例的 message 属性保持一致 -->
+<div id="app2">
+	<span v-bind:title="m">鼠标悬停几秒钟查看此处动态绑定的提示信息！</span>
+</div>
+<div id="app3">
+	<p v-if="seen">看到我了</p>
+</div>
+<div id="app4">
+	<ol>
+		<li v-for="x in lis">
+			{{x.text}}
+		</li>
+	</ol>
+</div>
+<div id="app5">
+	<p>{{msg}}</p>
+	<button v-on:click="reverseM">逆转消息</button>
+	<button v-on:click="test">test</button>
+</div>
+<script>
+	var app4=new Vue({
+		el:"#app5",
+		data:{
+			msg:"hello!"
+		},
+		methods:{
+			reverseM:function(){
+				this.msg=this.msg.split('').reverse().join('');
+			},
+			test:function(){
+				alert(this.msg);
+			}
+		}
+	})
+	var app3=new Vue({
+		el:'#app4',
+		data:{
+			lis:[
+				{text:'学习JavaScript'},
+				{text:'study CSS'},
+				{text:'study Vue'}
+			]
+		}
+	})
+	var app=new Vue({
+		el:'#box',
+		data:{
+			msg:'hello world',
+			item1:'p0',
+			item2:'pf',
+			content:'div-style',
+			w:'100px',
+			h:'200px',
+			bg:'green',
+			css1:{
+				margin:'10px',
+				color:'#872',
+				width:'100px',
+				height:'100px',
+				background:'greenyellow',
+				// overflow:'hidden'
+			},
+			border:{
+				border:"2px solid #000"
+			},
+			url:'http://www.baidu.com'
+		}		
+	})
+	var app2=new Vue({
+			el:'#app2',
+			data:{
+				m:'页面加载于'+new Date().toLocaleString()
+			}
+		})
+	var app3=new Vue({
+		el:"#app3",
+		data:{
+			seen:true
+		}
+	})
+</script>
+</body>
+</html>
